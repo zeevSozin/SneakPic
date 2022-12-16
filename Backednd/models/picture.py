@@ -6,6 +6,8 @@ class picture(modelBase):
     albume: id
     originalPictureUri: str
     processedPictureUri: str
+    nativeMetadata: object
+    analiticsMetadata: object
 
     isDeleted: bool
     

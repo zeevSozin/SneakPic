@@ -6,9 +6,16 @@ from yolov5 import yoloAnalitics as yolo
 import torch
 import io
 import json
-
+import os
+import shutil
+from datetime import datetime
+import time
+from router import test_router
 
 app = FastAPI()
+
+app.include_router(test_router.router)
+
 @app.get("/")
 async def get_root():
     return {"message": "Hello World, This Api allow you to upload photos and recive cobject detyected from the photu using the YOLO 3 algrithem", "method": "GET"}
@@ -37,6 +44,26 @@ async def create_upload_files(file: List[bytes] = File()) :
         detectionInfo = yolo.DetectByImagesClassOnly(images)
         json_metadata = json.loads(detectionInfo)
         return json_metadata   
+
+
+@app.post("/v1/uploadSingleImage/")
+async def create_upload_files(file:  bytes = File(...)) :
+    if not file:
+        return {"message": "No upload file sent"}
+    else:
+        images = []
+        originalPath='./DB/Images/Original'
+        
+        nativeMetadata = yolo.extractNativeMetadata(file)
+        return nativeMetadata
+
+
+
+
+
+
+
+
 
 
 
