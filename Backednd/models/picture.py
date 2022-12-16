@@ -8,6 +8,5 @@ class picture(modelBase):
     processedPictureUri: str
     nativeMetadata: object
     analiticsMetadata: object
-
     isDeleted: bool
     
