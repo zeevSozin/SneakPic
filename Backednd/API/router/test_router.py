@@ -141,6 +141,7 @@ async def Upload_picture_to_album_and_show_results(albumName: str , file:  Uploa
     if not file:
             return {"message": "No upload file sent"}
     else:
+        tagCollection = "tags"
         originalPath='../DB/Images/Original'
         processedPath='../DB/Images/processed'
         originalName = file.filename
@@ -170,5 +171,6 @@ async def Upload_picture_to_album_and_show_results(albumName: str , file:  Uploa
         }
         pictureId = dbUtills.InsertDocument(db,pictureCollection,document)
         dbUtills.AddPictureIdToAlbum(db,albumCollection, albumId, pictureId)
+        dbUtills.AddTagsFromPicture(db,pictureCollection,tagCollection,pictureId)
         return FileResponse(f"{DPath}/image0.jpg")
 
