@@ -85,7 +85,7 @@ async def create_upload_files(file:  UploadFile = File(...)) :
         return FileResponse(f"{DPath}/image0.jpg")
 
 @router.post('/UploadImageToDBAndGetImageOverlay')
-async def create_upload_files(file:  UploadFile = File(...)) :
+async def upload_picture_to_batabase(file:  UploadFile = File(...)) :
     if not file:
         return {"message": "No upload file sent"}
     else:
@@ -109,7 +109,7 @@ async def create_upload_files(file:  UploadFile = File(...)) :
         document=dict()
         document={
             "name":originalName,
-            "albume":"",
+            "albume":[],
             "originalPictureUri":OPath,
             "proccessedPictureUri":f"{DPath}/image0.jpg",
             "nativeMetadata": nativeMetadata,
@@ -135,4 +135,40 @@ async def createNewAlbum(input_data: album.album):
 async def Get_album_object_Id_by_name(albumName: str ):
     albumId = dbUtills.QuaryObjectId(db,albumCollection,{"name":f"{albumName}"})
     return albumId
+@router.post("/uploadPicturToAlbumAndShowResuls")
+async def Upload_picture_to_album_and_show_results(albumName: str , file:  UploadFile = File(...) ):
+    albumId = dbUtills.QuaryObjectId(db,albumCollection,{"name":f"{albumName}"})
+    if not file:
+            return {"message": "No upload file sent"}
+    else:
+        originalPath='../DB/Images/Original'
+        processedPath='../DB/Images/processed'
+        originalName = file.filename
+        timeNow= datetime.now()
+        timeStamp = str(int(round(timeNow.timestamp())))
+        newFileName= timeStamp+'_'+file.filename
+        OPath = os.path.join(originalPath,newFileName)
+        DPath = os.path.join(processedPath,newFileName)
+        with open(OPath, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        nativeMetadata = yolo.extractNativeMetadata(OPath)
+        with open(OPath, "rb") as image:
+            f = image.read()
+            b = bytearray(f)
+        input_image =Image.open(io.BytesIO(b)).convert("RGB")
+        analiticsMetadata = yolo.DetectByImageReturnClassOnly(input_image)
+        yolo.saveProcessedImage(input_image,DPath)
+        document=dict()
+        document={
+            "name":originalName,
+            "albume":[albumId],
+            "originalPictureUri":OPath,
+            "proccessedPictureUri":f"{DPath}/image0.jpg",
+            "nativeMetadata": nativeMetadata,
+            "analiticsMetadata":analiticsMetadata,
+            "isDeleted":False
+        }
+        pictureId = dbUtills.InsertDocument(db,pictureCollection,document)
+        dbUtills.AddPictureIdToAlbum(db,albumCollection, albumId, pictureId)
+        return FileResponse(f"{DPath}/image0.jpg")
 
