@@ -6,6 +6,8 @@ COPY ./requierments.txt .
 
 COPY ./API/main.py .
 
+COPY ./DB .
+
 COPY ./API/yolov5 ./yolov5
 
 

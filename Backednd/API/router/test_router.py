@@ -2,7 +2,6 @@ from fastapi import FastAPI, Form ,File, UploadFile
 from fastapi.responses import FileResponse
 from typing import List
 from PIL import Image
-import uvicorn
 from yolov5 import yoloAnalitics as yolo
 import torch
 import io
@@ -10,10 +9,9 @@ import json
 import os
 import shutil
 from datetime import datetime
-import time
 from fastapi import APIRouter
 from utills import dbUtills
-#from .models import picture
+from Localmodels import album
 
 db='test-db'
 pictureCollection="pictures"
@@ -120,4 +118,21 @@ async def create_upload_files(file:  UploadFile = File(...)) :
         }
         dbUtills.InsertDocument(db,pictureCollection,document)
         return FileResponse(f"{DPath}/image0.jpg")
-   
+
+@router.post("/addAlbum")
+async def createNewAlbum(input_data: album.album):
+   document=dict()
+   document = {
+        "name" : input_data.name,
+        "description" :input_data.description,
+        "count":0,
+        "picturs":[],
+        "isDeleted":False,
+   }
+   dbUtills.InsertDocument(db,albumCollection,document)
+
+@router.get("/GetAlbumId")
+async def Get_album_object_Id_by_name(albumName: str ):
+    albumId = dbUtills.QuaryObjectId(db,albumCollection,{"name":f"{albumName}"})
+    return albumId
+
