@@ -7,7 +7,7 @@ import json
 #client = MongoClient("mongodb://localhost:27017/")
 
 def connectToDb():
-    return MongoClient("mongodb://localhost:27017/")
+    return MongoClient("mongodb://DB:27017/")
 
 def InsertDocument(db ,collection, document):
     client=connectToDb()

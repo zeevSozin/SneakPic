@@ -21,25 +21,11 @@ def extractNativeMetadata(imageFile):
 
 
 
-
-# Model
 def DetectByImage(img):
     model = torch.hub.load('ultralytics/yolov5', 'yolov5s')  # or yolov5n - yolov5x6, custom
-
-    # Images
-    #img = 'https://ultralytics.com/images/zidane.jpg'  # or file, Path, PIL, OpenCV, numpy, list
-    #img = './testing/images/traffic.jpg'
-    #img = './testing/images/skiVecation1.jpg'
-
-    # Inference
     results = model(img)
-
-    # Results
-    #results.print()  # or .show(), .save(), .crop(), .pandas(), etc.
-    #results.show()
     jsonData=results.pandas().xyxy[0].to_json(orient="records")  # JSON img1 predictions
     json_object = json.loads(jsonData)
-    #print(json.dumps(json_object, indent=1))
     return json.dumps(json_object, indent=1)
 
 def DetectByImageReturnClassOnly(img):
@@ -48,15 +34,12 @@ def DetectByImageReturnClassOnly(img):
     pdData=results.pandas().xyxy[0].value_counts('name').to_json()
     json_object = json.loads(pdData)
     return json_object
-    #return json.dumps(json_object, indent=1)
+
 
 def saveProcessedImage(img,destinationDir):
     model = torch.hub.load('ultralytics/yolov5', 'yolov5s')  # or yolov5n - yolov5x6, custom
     results = model(img)
     results.save(save_dir=destinationDir)
-
-
-
 
 
 def DetectByImages(images):
@@ -88,5 +71,5 @@ def GetProcessedImage(image):
     result = model(image)
     return result
 
-#def SaveRawImage(image,path)        
+     
 

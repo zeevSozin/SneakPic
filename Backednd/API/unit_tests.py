@@ -1,7 +1,13 @@
 from unittest import TestCase
 from .utills import dbUtills
 
-class dbUtillsTest(TestCase):
+"""
+the unit tests are testing functionality with DB , in order to perform those tests
+Db should be attached!!!
+
+"""
+
+# class dbUtillsTest(TestCase):
 #     def test_insert_document_to_collection(self):
 #         document= {
 #   "name": "test-album-4",
@@ -78,6 +84,6 @@ class dbUtillsTest(TestCase):
     #     res = dbUtills.GetAnaliticsMetadatfromPic("test-db","pictures","639cdab574e899374945881f")
     #     assert res == 0
 
-    def test_tag_update_with_picture(self):
-        res = dbUtills.AddTagsFromPicture("test-db","pictures","tags","639db2fba8dbb7fe777475c0")
-        assert res == 0
+    # def test_tag_update_with_picture(self):
+    #     res = dbUtills.AddTagsFromPicture("test-db","pictures","tags","639db2fba8dbb7fe777475c0")
+    #     assert res == 0

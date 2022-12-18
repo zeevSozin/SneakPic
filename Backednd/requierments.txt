@@ -8,6 +8,7 @@ pandas
 Pillow>=7.1.2
 psutil  # system resources
 pydantic==1.10.2
+pymongo
 python-multipart==0.0.5
 PyYAML>=5.3.1
 requests>=2.23.0
