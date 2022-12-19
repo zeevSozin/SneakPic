@@ -2,12 +2,13 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId 
 from bson.json_util import dumps, loads
 import json
-#from ..models import album,picture
 
-#client = MongoClient("mongodb://localhost:27017/")
+
+
 
 def connectToDb():
     return MongoClient("mongodb://DB:27017/")
+
 
 def InsertDocument(db ,collection, document):
     client=connectToDb()
@@ -197,16 +198,5 @@ def AddTagsFromPicture(db,pictureCollection,tagCollection,pictureId):
 
 
 
-# mydb = client["test-db"]
-# collection_album = mydb["albums"]
-# collection_picture = mydb["pictures"]
-# doc = {
-#     "name": "test album",
-#     "description": " terst description",  
-#     "count": 1,
-#     "picturs": "",
-#     "isDeleted": False
-# }
 
-# InsertDocument("test-db","albums",doc)
 
