@@ -4,7 +4,18 @@ from .yolov5 import yoloAnalitics as yolo
 from datetime import datetime
 from .router import test_router
 from .router import v1_router
-from .utills import dbUtills
+from .utills import mongoUtills
+import uvicorn
+from configparser import ConfigParser
+
+config = ConfigParser()
+config.read("config.ini")
+mongoParams = config["mongodb"]
+
+mongoHost = mongoParams["host"]
+mongoPort = mongoParams["port"]
+
+connectionString = "mongodb://" + mongoHost + ":" + mongoPort
 
 app = FastAPI()
 
@@ -13,14 +24,9 @@ app.include_router(v1_router.router)
 new_line = '\n'
 @app.get("/")
 async def get_root():
-    ###          inserting tag to db              ###
-    doc = {
-        "tags":[
+    mongo_client = mongoUtills.MongoUtills(connectionString)
+    mongo_client.init_db()
 
-        ]
-    }
-    dbUtills.InsertDocument("test_db","tags",doc)
-    ###          end of insert                    ###
 
 
     return "Hello This Api allow you to upload image and recive cobjects detected from the picture using the YOLOv5 AI algorithem, feel free to test in on [this-uri]:8080/docs"

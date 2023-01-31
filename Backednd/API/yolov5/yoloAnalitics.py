@@ -5,6 +5,8 @@ from PIL import Image
 from PIL.ExifTags import TAGS
 import io
 import pandas as pd
+import base64
+from io import BytesIO
 
 ## picture native metadata extraction
 
@@ -41,6 +43,13 @@ def saveProcessedImage(img,destinationDir):
     results = model(img)
     results.save(save_dir=destinationDir)
 
+def GetProccesedImabeasBase64(img):
+     model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
+     result = model(img)
+     bufferd = BytesIO()
+     result.save(bufferd)
+     return bufferd
+     
 
 def DetectByImages(images):
     result=list()

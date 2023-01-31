@@ -8,6 +8,8 @@ COPY ./API ./API
 
 COPY ./DB ./DB
 
+COPY ./config.ini .
+
 RUN pip install --no-cache-dir --upgrade -r ./requierments.txt
 
 RUN apt-get update

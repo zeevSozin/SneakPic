@@ -3,6 +3,8 @@ services:
   api:
     build: .
     container_name: app
+    volumes:
+      - config.ini:/congif
     ports:
       - 8080:8080
   DB:

@@ -7,7 +7,8 @@ import json
 
 
 def connectToDb():
-    return MongoClient("mongodb://DB:27017/")
+    # return MongoClient("mongodb://localhost:27017/")
+    pass
 
 
 def InsertDocument(db ,collection, document):
@@ -101,7 +102,7 @@ def AddPictureIdToAlbum(db,collection,albumId,pictureId):
     client=connectToDb()
     mydb = client[db]
     mycol = mydb[collection]
-    res = mycol.update_one({"_id":ObjectId(albumId)},{"$push":{"picturs": pictureId},"$inc":{"count":1}})
+    res = mycol.update_one({"_id":ObjectId(albumId)},{"$push":{"pictures": pictureId}, "$inc":{"count":1}})
     return res
 
 def AddAlbumtoPicture(db,collection,pictureId,albumId):
