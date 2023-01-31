@@ -1,0 +1,4 @@
+streamlit>=1.17.0
+streamlit-extras
+configparser
+requests>=2.28.2
