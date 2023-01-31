@@ -274,7 +274,34 @@ class DbClient:
         my_collection = mydb[tagCollection]
         my_collection.update_one({"_id": ObjectId(tag_rec_id), "tags.name": f"{tagName}" },
         {"$pull" : {f"tags.$.pictures": {"pictureId": f"{picture_id}" }}})
-         
+
+    def CheckIfPictureCollectionInTagIsEmpty(self, db, tagCollection, tagName):
+        collection_len = -1
+        isEmty = False
+        tag_rec_id = self.GetTagsRecordId(db,tagCollection)
+        client = self.connectToDb()
+        mydb = client[db]
+        my_collection = mydb[tagCollection]
+        cursor = my_collection.find_one({"_id": ObjectId(tag_rec_id)})
+        picture_rec_list = list()
+        tagList = list()
+        tagList.append(list(cursor["tags"]))
+        for tag in tagList:
+            for t in tag:
+                if t["name"] == tagName:
+                    collection_len = len(t["pictures"])
+                    if collection_len == 0:
+                        isEmty =True
+        return isEmty
+
+    def DeleteEmptyTag(self,db, tagCollection, tagName):
+        tag_rec_id = self.GetTagsRecordId(db,tagCollection)
+        client = self.connectToDb()
+        mydb = client[db]
+        my_collection = mydb[tagCollection]
+        my_collection.update_one({"_id": ObjectId(tag_rec_id)},
+        {"$pull" : {f"tags": {"name": f"{tagName}" }}})
+
 
 
     def DeletePictureFromTags(self, db, tagCollection, picture_id):
@@ -288,9 +315,9 @@ class DbClient:
             picture_ids_in_tag = self.GetAllPicturesFromTagByTagName(db, tagCollection, item)
             if (picture_id in picture_ids_in_tag):
                 self.DeletePictureIdFromPicturesArrayInTags(db, tagCollection, item, picture_id)
-        
+                if self.CheckIfPictureCollectionInTagIsEmpty(db, tagCollection, item):
+                    self.DeleteEmptyTag(db, tagCollection, item)
 
- 
     def GetOriginalPicurePathFromPicture(self, db, pictureCollection, picture_id):
         client = self.connectToDb()
         mydb = client[db]

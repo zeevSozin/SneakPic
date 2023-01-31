@@ -61,9 +61,13 @@ async def create_new_album_on_DB(input_data: api_models.album):
 @router.post("/delete_album")
 async def delete_album(input_data: api_models.albumName):
     db_client = DbClient.DbClient(connection_string)
-    res = db_client.QuaryObjectIdByName(db,albumCollection,input_data.album_name)
-    db_client.DeleteObjectById(db, albumCollection, res)
-    return {"message": "album "+input_data.album_name+" was deleted" + res}
+    album_id = db_client.QuaryObjectIdByName(db,albumCollection,input_data.album_name)
+    RawPictureIds = db_client.GetAllPicturesIdfromAlbum(db, albumCollection, album_id)
+    pictureId_list= json.loads(RawPictureIds)
+    for pic in pictureId_list:
+        db_client.DeleteObjectById(db, pictureCollection, pic)
+    db_client.DeleteObjectById(db, albumCollection, album_id)
+    return {"message": "album "+input_data.album_name+" was deleted" + album_id}
 
 
 '''
