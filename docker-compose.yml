@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  api:
+    build: ./Backend
+    container_name: backend_app
+    volumes:
+      - /Backend/config.ini:/config.ini
+    ports:
+      - 8080:8080
+  DB:
+    image: "mongo:latest"
+    container_name: mongo
+    volumes:
+      - /Backend/DB/TestDb/mongodata:/data/db
+    ports:
+      - 27017:27017
+    restart: unless-stopped
+  app:
+    build: ./Frontend
+    container_name: frontend_app
+    volumes:
+      - /Frontend/config.ini:/config.ini
+    ports:
+      - 8081:8081
+
+
